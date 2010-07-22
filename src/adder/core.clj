@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:use hiccup.core)
   (:use hiccup.page-helpers)
+  (:use adder.middleware)
   (:use ring.middleware.reload)
   (:use ring.middleware.stacktrace)
   (:require [ring.util.response :as resp]))
@@ -51,5 +52,7 @@
 
 (def app
   (-> #'app-core
-    (wrap-reload '[adder.core])
+    (wrap-request-logging)
+    (wrap-reload '[adder.middleware adder.core])
+    (wrap-bounce-favicon)
     (wrap-stacktrace)))
