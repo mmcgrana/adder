@@ -3,6 +3,8 @@
   (:use hiccup.core)
   (:use hiccup.page-helpers)
   (:use adder.middleware)
+  (:use ring.middleware.file)
+  (:use ring.middleware.file-info)
   (:use ring.middleware.reload)
   (:use ring.middleware.stacktrace)
   (:require [ring.util.response :as resp]))
@@ -13,7 +15,8 @@
     (xhtml-tag "en"
       [:head
         [:meta {:http-equiv "Content-type" :content "text/html; charset=utf-8"}]
-        [:title "adder"]]
+        [:title "adder"]
+        [:link {:href "/adder.css" :rel "stylesheet" :type "text/css"}]]
       [:body content])))
 
 (defn view-input [& [a b]]
@@ -22,14 +25,14 @@
     [:form {:method "post" :action "/"}
       (if (and a b)
         [:p "those are not both numbers!"])
-      [:input {:type "text" :name "a" :value a}] " + "
-      [:input {:type "text" :name "b" :value b}] [:br]
+      [:input.math {:type "text" :name "a" :value a}] [:span.math " + "]
+      [:input.math {:type "text" :name "b" :value b}] [:br]
       [:input {:type "submit" :value "add"}]]))
 
 (defn view-output [a b sum]
   (view-layout
     [:h2 "two numbers added"]
-    [:p "the sum of " a " and " b " is " sum]
+    [:span.math a " + " b " = " sum] [:br]
     [:a {:href "/"} "add more numbers"]))
 
 (defn parse-input [a b]
@@ -52,6 +55,8 @@
 
 (def app
   (-> #'app-core
+    (wrap-file "public")
+    (wrap-file-info)
     (wrap-request-logging)
     (wrap-reload '[adder.middleware adder.core])
     (wrap-bounce-favicon)
