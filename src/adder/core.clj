@@ -1,7 +1,8 @@
 (ns adder.core
   (:use compojure.core)
   (:use hiccup.core)
-  (:use hiccup.page-helpers))
+  (:use hiccup.page-helpers)
+  (:use ring.middleware.reload)
 
 (defn view-layout [& content]
   (html
@@ -29,7 +30,7 @@
 (defn parse-input [a b]
   [(Integer/parseInt a) (Integer/parseInt b)])
 
-(defroutes app
+(defroutes app-core
   (GET "/" []
     (view-input))
 
@@ -37,3 +38,7 @@
     (let [[a b] (parse-input a b)
           sum   (+ a b)]
       (view-output a b sum))))
+
+(def app
+  (-> #'app-core
+    (wrap-reload '[adder.core])))
