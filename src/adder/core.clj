@@ -3,7 +3,8 @@
   (:use hiccup.core)
   (:use hiccup.page-helpers)
   (:use ring.middleware.reload)
-  (:use ring.middleware.stacktrace))
+  (:use ring.middleware.stacktrace)
+  (:require [ring.util.response :as resp]))
 
 (defn view-layout [& content]
   (html
@@ -43,7 +44,10 @@
             sum   (+ a b)]
         (view-output a b sum))
       (catch NumberFormatException e
-        (view-input a b)))))
+        (view-input a b))))
+
+  (ANY "/*" [path]
+    (resp/redirect "/")))
 
 (def app
   (-> #'app-core
