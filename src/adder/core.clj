@@ -14,12 +14,14 @@
         [:title "adder"]]
       [:body content])))
 
-(defn view-input []
+(defn view-input [& [a b]]
   (view-layout
     [:h2 "add two numbers"]
     [:form {:method "post" :action "/"}
-      [:input {:type "text" :name "a"}] " + "
-      [:input {:type "text" :name "b"}] [:br]
+      (if (and a b)
+        [:p "those are not both numbers!"])
+      [:input {:type "text" :name "a" :value a}] " + "
+      [:input {:type "text" :name "b" :value b}] [:br]
       [:input {:type "submit" :value "add"}]]))
 
 (defn view-output [a b sum]
@@ -36,9 +38,12 @@
     (view-input))
 
   (POST "/" [a b]
-    (let [[a b] (parse-input a b)
-          sum   (+ a b)]
-      (view-output a b sum))))
+    (try
+      (let [[a b] (parse-input a b)
+            sum   (+ a b)]
+        (view-output a b sum))
+      (catch NumberFormatException e
+        (view-input a b)))))
 
 (def app
   (-> #'app-core
