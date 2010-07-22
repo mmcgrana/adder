@@ -38,7 +38,7 @@
 (defn parse-input [a b]
   [(Integer/parseInt a) (Integer/parseInt b)])
 
-(defroutes app-core
+(defroutes handler
   (GET "/" []
     (view-input))
 
@@ -54,7 +54,7 @@
     (resp/redirect "/")))
 
 (def app
-  (-> #'app-core
+  (-> #'handler
     (wrap-file "public")
     (wrap-file-info)
     (wrap-request-logging)
