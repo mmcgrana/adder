@@ -3,6 +3,7 @@
   (:use hiccup.core)
   (:use hiccup.page-helpers)
   (:use ring.middleware.reload)
+  (:use ring.middleware.stacktrace))
 
 (defn view-layout [& content]
   (html
@@ -41,4 +42,5 @@
 
 (def app
   (-> #'app-core
-    (wrap-reload '[adder.core])))
+    (wrap-reload '[adder.core])
+    (wrap-stacktrace)))
