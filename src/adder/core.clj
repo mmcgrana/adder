@@ -9,6 +9,9 @@
   (:use ring.middleware.stacktrace)
   (:require [ring.util.response :as resp]))
 
+(def production?
+  (= "production" (get (System/getenv) "APP_ENV")))
+
 (defn view-layout [& content]
   (html
     (doctype :xhtml-strict)
@@ -60,4 +63,6 @@
     (wrap-request-logging)
     (wrap-reload '[adder.middleware adder.core])
     (wrap-bounce-favicon)
-    (wrap-stacktrace)))
+    (wrap-exception-logging)
+    (wrap-if production?       wrap-failsafe)
+    (wrap-if (not production?) wrap-stacktrace)))
