@@ -58,6 +58,7 @@
 
 (def app
   (-> #'handler
+    (wrap-utf)
     (wrap-file "public")
     (wrap-file-info)
     (wrap-request-logging)

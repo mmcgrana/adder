@@ -43,3 +43,8 @@
        :headers {}
        :body ""}
       (handler req))))
+
+(defn wrap-utf [handler]
+  (fn [req]
+    (let [resp (handler req)]
+      (assoc-in resp [:headers "Content-Type"] "text/html; charset=utf-8"))))
