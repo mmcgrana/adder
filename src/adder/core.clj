@@ -30,13 +30,13 @@
         [:p "those are not both numbers!"])
       [:input.math {:type "text" :name "a" :value a}] [:span.math " + "]
       [:input.math {:type "text" :name "b" :value b}] [:br]
-      [:input {:type "submit" :value "add"}]]))
+      [:input.action {:type "submit" :value "add"}]]))
 
 (defn view-output [a b sum]
   (view-layout
     [:h2 "two numbers added"]
-    [:span.math a " + " b " = " sum] [:br]
-    [:a {:href "/"} "add more numbers"]))
+    [:p.math a " + " b " = " sum]
+    [:a.action {:href "/"} "add more numbers"]))
 
 (defn parse-input [a b]
   [(Integer/parseInt a) (Integer/parseInt b)])
