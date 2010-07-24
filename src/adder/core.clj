@@ -7,7 +7,7 @@
   (:use ring.middleware.file-info)
   (:use ring.middleware.reload)
   (:use ring.middleware.stacktrace)
-  (:require [ring.util.response :as resp]))
+  (:use ring.util.response))
 
 (def production?
   (= "production" (get (System/getenv) "APP_ENV")))
@@ -54,7 +54,7 @@
         (view-input a b))))
 
   (ANY "/*" [path]
-    (resp/redirect "/")))
+    (redirect "/")))
 
 (def app
   (-> #'handler
