@@ -39,7 +39,7 @@
 (defn wrap-bounce-favicon [handler]
   (fn [req]
     (if (= [:get "/favicon.ico"] [(:request-method req) (:uri req)])
-      {:status 400
+      {:status 404
        :headers {}
        :body ""}
       (handler req))))
