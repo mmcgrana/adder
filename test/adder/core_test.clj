@@ -24,7 +24,6 @@
     (is (= 200 (:status resp)))
     (is (re-find #"1 \+ 2 = 3" (:body resp)))))
 
-
 (deftest handle-add-invalid
   (let [resp (handler {:uri "/" :request-method :post
                        :params {"a" "foo" "b" "bar"}})]
