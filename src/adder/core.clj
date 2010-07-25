@@ -12,6 +12,9 @@
 (def production?
   (= "production" (get (System/getenv) "APP_ENV")))
 
+(def development?
+  (not production?))
+
 (defn view-layout [& content]
   (html
     (doctype :xhtml-strict)
@@ -62,8 +65,8 @@
     (wrap-file "public")
     (wrap-file-info)
     (wrap-request-logging)
-    (wrap-reload '[adder.middleware adder.core])
+    (wrap-if development? wrap-reload '[adder.middleware adder.core])
     (wrap-bounce-favicon)
     (wrap-exception-logging)
-    (wrap-if production?       wrap-failsafe)
-    (wrap-if (not production?) wrap-stacktrace)))
+    (wrap-if production?  wrap-failsafe)
+    (wrap-if development? wrap-stacktrace)))
