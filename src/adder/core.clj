@@ -7,6 +7,7 @@
   (:use ring.middleware.file-info)
   (:use ring.middleware.reload)
   (:use ring.middleware.stacktrace)
+  (:use ring.middleware.params)
   (:use ring.util.response))
 
 (def production?
@@ -37,9 +38,10 @@
 
 (defn view-output [a b sum]
   (view-layout
-    [:h2 "two numbers added"]
+    [:h2 "two numbers added"]	
     [:p.math a " + " b " = " sum]
-    [:a.action {:href "/"} "add more numbers"]))
+    [:a.action {:href "/"} "add more numbers"])
+)
 
 (defn parse-input [a b]
   [(Integer/parseInt a) (Integer/parseInt b)])
@@ -54,7 +56,7 @@
             sum   (+ a b)]
         (view-output a b sum))
       (catch NumberFormatException e
-        (view-input a b))))
+        (view-input a b)))) 
 
   (ANY "/*" [path]
     (redirect "/")))
@@ -69,4 +71,5 @@
     (wrap-bounce-favicon)
     (wrap-exception-logging)
     (wrap-if production?  wrap-failsafe)
-    (wrap-if development? wrap-stacktrace)))
+    (wrap-if development? wrap-stacktrace)
+	(wrap-params)))
